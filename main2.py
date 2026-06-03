@@ -7,7 +7,7 @@ PORT = 30000
 # JSON request (status batterij)
 payload = {
     "id": 2,
-    "method": "Bat.GetStatus",
+    "method": "ES.GetStatus",
     "params": {"id": 0}
 }
 

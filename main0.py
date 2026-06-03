@@ -7,8 +7,8 @@ PORT = 30000
 # JSON request (status batterij)
 payload = {
     "id": 0,
-    "method": "Bat.GetStatus",
-    "params": {"id": 0}
+    "method": "Marstek.GetStatus",
+    "params":{"ble_mac":"0"}
 }
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
