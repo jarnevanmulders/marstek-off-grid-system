@@ -22,7 +22,17 @@ dhcp-range=192.168.10.50,192.168.10.150,255.255.255.0,24h
 - `ip a show eth0`
 - `ifconfig`
 - `arp -a`
-
+- `sudo nano /etc/NetworkManager/conf.d/99-unmanaged-eth0.conf`
+- Toevoegen
+  ```
+  	[keyfile]
+	unmanaged-devices=interface-name:eth0
+  ```
+- Restart
+	```
+	sudo systemctl restart NetworkManager
+	sudo systemctl restart dnsmasq
+	```
 
 
 ### 2️⃣ Create SSH Key to clone this repository
