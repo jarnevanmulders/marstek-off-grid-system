@@ -99,28 +99,19 @@ sudo python3 -m pip install luma.oled luma.core pillow --break-system-packages
 ``` 
 
 ### 7️⃣ Test all individual scripts
-1. Test `system.py`
-2. Test `librevna.py`
-3. Test `controller.py`
-4. Test `app.py`
-5. Run services
+1. Test `controller.py`
+2. Run services
 	1. Copy service files to systemd:
 	```
-	sudo cp ~/Radar-LibreVNA-Firmware/app.service /lib/systemd/system/
-	sudo cp ~/Radar-LibreVNA-Firmware/controller.service /lib/systemd/system/
+	sudo cp ~/marstek-off-grid-system/app.service /lib/systemd/system/
+	sudo cp ~/marstek-off-grid-system/controller.service /lib/systemd/system/
  	```
  	2. Enable and start services
   	```
-	sudo systemctl enable app.service
    	sudo systemctl enable controller.service
-   	sudo systemctl start app.service
    	sudo systemctl start controller.service
   	```   
 
-### 8️⃣ Test system data script
-1. Download following packages
-	`sudo python3 -m pip install psutil --break-system-packages`
-2. Test `system.py`
 
 ### 9️⃣ Other features
 1. Tailscale
