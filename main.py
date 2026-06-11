@@ -15,8 +15,6 @@ GPIO.setmode(GPIO.BCM)
 PV_RELAY_PIN = 24
 LOAD_RELAY_PIN = 25
 
-update_display.last = None
-
 soc = None
 
 output_pv = False
@@ -97,6 +95,8 @@ def update_display(data):
         draw.rectangle((120, 0, 127, 7), fill=255)
 
     device.display(image)
+
+update_display.last = None
 
 def update_relay(pin, state):
     try:
