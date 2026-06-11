@@ -103,7 +103,6 @@ sudo python3 -m pip install luma.oled luma.core pillow --break-system-packages
 2. Run services
 	1. Copy service files to systemd:
 	```
-	sudo cp ~/marstek-off-grid-system/app.service /lib/systemd/system/
 	sudo cp ~/marstek-off-grid-system/controller.service /lib/systemd/system/
  	```
  	2. Enable and start services
