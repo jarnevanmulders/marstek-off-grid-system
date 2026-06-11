@@ -73,7 +73,7 @@ def update_display(data):
 update_display.last = None
 
 while 1:
-    time.sleep(1)
+    time.sleep(10)
 
     combined = {}
 
