@@ -50,4 +50,9 @@ while 1:
 
     combined = {**part_1["result"], **part_2["result"]}
 
-    print(combined)
+    # print(combined)
+
+    print(combined["soc"])
+    print(combined["bat_temp"])
+    print(combined["bat_capacity"]/1000)
+    print(combined["offgrid_power"])
