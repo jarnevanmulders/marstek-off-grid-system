@@ -2,9 +2,31 @@ import socket
 import json
 import time
 
+import RPi.GPIO as GPIO
+import time
+
 from luma.core.interface.serial import i2c
 from luma.oled.device import ssd1306
 from PIL import Image, ImageDraw, ImageFont
+
+# BCM pinnummering gebruiken
+GPIO.setmode(GPIO.BCM)
+
+PV_RELAY_PIN = 24
+LOAD_RELAY_PIN = 25
+
+update_display.last = None
+
+soc = None
+
+output_pv = False
+output_load = False
+
+GPIO.setup(PV_RELAY_PIN, GPIO.OUT)
+GPIO.setup(LOAD_RELAY_PIN, GPIO.OUT)
+
+serial = i2c(port=1, address=0x3C)
+device = ssd1306(serial)
 
 MARSTEK_IP = "192.168.10.141"   # pas aan naar jouw toestel
 PORT = 30000
@@ -46,9 +68,10 @@ def retrieve_info(payload):
     finally:
         sock.close()
 
+heartbeat = False
+
+
 def update_display(data):
-    serial = i2c(port=1, address=0x3C)
-    device = ssd1306(serial)
 
     image = Image.new("1", (device.width, device.height))
     draw = ImageDraw.Draw(image)
@@ -68,9 +91,30 @@ def update_display(data):
     draw.text((0, 32), f"Cap: {cap_kwh:.2f} kWh", fill=255)
     draw.text((0, 48), f"Offgrid: {offgrid}W", fill=255)
 
+    heartbeat = not heartbeat
+
+    if heartbeat:
+        draw.rectangle((120, 0, 127, 7), fill=255)
+
     device.display(image)
 
-update_display.last = None
+def update_relay(pin, state):
+    try:
+        if state:
+            GPIO.output(pin, GPIO.HIGH)
+        else:
+            GPIO.output(pin, GPIO.LOW)
+
+    except KeyboardInterrupt:
+        pass
+
+    finally:
+        GPIO.cleanup()
+
+def update_relays():
+    update_relay(PV_RELAY_PIN, output_pv)
+    update_relay(LOAD_RELAY_PIN, output_load)
+    
 
 while 1:
     time.sleep(10)
@@ -93,13 +137,32 @@ while 1:
 
     # veilige prints
     try:
-        print(part_1, part_2)
-        print(combined.get("soc"))
+        # print(part_1, part_2)
+
+        soc = combined.get("soc")
+
+        print(f"SOC: {soc}")
         # print(combined.get("bat_temp"))
         # print((combined.get("bat_capacity") or 0) / 1000)
         # print(combined.get("offgrid_power"))
-        if update_display.last != combined:
-            update_display.last = combined
-            update_display(combined)
+        # if update_display.last != combined:
+        #     update_display.last = combined
+        update_display(combined)
     except Exception as e:
         print(f"print failed: {e}")
+    
+    # Check SoC and determine load and pv relay
+    if output_pv and soc >= 99:
+        output_pv = False
+    elif not output_pv and soc <= 90:
+        output_pv = True
+
+    # Load hysterese
+    if output_load and soc <= 30:
+        output_load = False
+    elif not output_load and soc >= 40:
+        output_load = True
+
+
+    # Update relays
+    update_relays()
