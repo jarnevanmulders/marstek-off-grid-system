@@ -43,7 +43,26 @@ dhcp-range=192.168.10.50,192.168.10.150,255.255.255.0,24h
 	```
 2. Git clone via SSH KEY on rpi in home dir: `git clone git@github.com:jarnevanmulders/marstek-off-grid-system.git`
 
-### 4️⃣ 
+### 4️⃣ Enable Oled display
+1. Enable I2C
+	```
+	sudo raspi-config
+	```
+	Interface Options → I2C → Enable
+2. Reboot
+	```
+	sudo reboot
+	```
+3. Install I2C tools
+	``` 
+	sudo apt update
+	sudo apt install -y i2c-tools python3-pip
+	```
+4. Check
+	```
+	i2cdetect -y 1
+	```
+
 
 ### 5️⃣ Connection with temperature sensors DS18B20
 1. Connect D to GPIO4
