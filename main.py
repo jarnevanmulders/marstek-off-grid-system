@@ -127,8 +127,6 @@ last_output_load = None
 while 1:
     time.sleep(1)
 
-    global last_output_pv, last_output_load
-
     counter = counter + 1
 
     if counter > 10:
