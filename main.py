@@ -121,6 +121,8 @@ combined = {}
 
 counter = 0
 
+global last_output_pv, last_output_load
+
 while 1:
     time.sleep(1)
 
@@ -160,7 +162,11 @@ while 1:
 
 
         # Update relays
-        # update_relays()
+        if output_pv != last_output_pv or output_load != last_output_load:
+            update_relays()
+
+            last_output_pv = output_pv
+            last_output_load = output_load
 
     # veilige prints
     try:
