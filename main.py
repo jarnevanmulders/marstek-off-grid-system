@@ -115,11 +115,12 @@ def update_relay(pin, state):
 
 def update_relays():
     update_relay(PV_RELAY_PIN, output_pv)
-    # update_relay(LOAD_RELAY_PIN, output_load)
+    time.sleep(0.5)
+    update_relay(LOAD_RELAY_PIN, output_load)
     
 combined = {}
 
-counter = 0
+counter = 9
 
 last_output_pv = False
 last_output_load = False
@@ -147,6 +148,8 @@ while 1:
             print(f"part_2 failed: {e}")
 
         if soc != None:
+            soc = combined.get("soc")
+            
             # Check SoC and determine load and pv relay
             if output_pv and soc >= 99:
                 output_pv = False
