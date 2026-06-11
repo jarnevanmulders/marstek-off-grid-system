@@ -121,10 +121,13 @@ combined = {}
 
 counter = 0
 
-global last_output_pv, last_output_load
+last_output_pv = None
+last_output_load = None
 
 while 1:
     time.sleep(1)
+
+    global last_output_pv, last_output_load
 
     counter = counter + 1
 
