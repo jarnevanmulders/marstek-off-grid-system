@@ -143,18 +143,18 @@ while 1:
         except Exception as e:
             print(f"part_2 failed: {e}")
 
+        if soc != None:
+            # Check SoC and determine load and pv relay
+            if output_pv and soc >= 99:
+                output_pv = False
+            elif not output_pv and soc <= 90:
+                output_pv = True
 
-        # Check SoC and determine load and pv relay
-        if output_pv and soc >= 99:
-            output_pv = False
-        elif not output_pv and soc <= 90:
-            output_pv = True
-
-        # Load hysterese
-        if output_load and soc <= 30:
-            output_load = False
-        elif not output_load and soc >= 40:
-            output_load = True
+            # Load hysterese
+            if output_load and soc <= 30:
+                output_load = False
+            elif not output_load and soc >= 40:
+                output_load = True
 
 
         # Update relays
