@@ -85,6 +85,7 @@ sudo python3 -m pip install filelock --break-system-packages
 sudo python3 -m pip install influxdb_client --break-system-packages
 sudo python3 -m pip install flask --break-system-packages
 sudo python3 -m pip install psutil --break-system-packages
+sudo python3 -m pip install luma.oled luma.core pillow --break-system-packages
 ``` 
 
 ### 7️⃣ Test all individual scripts
