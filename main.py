@@ -108,8 +108,8 @@ def update_relay(pin, state):
     except KeyboardInterrupt:
         pass
 
-    finally:
-        GPIO.cleanup()
+    # finally:
+    #     GPIO.cleanup()
 
 def update_relays():
     update_relay(PV_RELAY_PIN, output_pv)
