@@ -18,13 +18,13 @@ try:
 
         # Pin 1 hoog
         GPIO.output(PIN1, GPIO.HIGH)
-        time.sleep(1)
+        time.sleep(5)
 
         GPIO.output(PIN1, GPIO.LOW)
 
         # Pin 2 hoog
         GPIO.output(PIN2, GPIO.HIGH)
-        time.sleep(1)
+        time.sleep(5)
 
         GPIO.output(PIN2, GPIO.LOW)
 
