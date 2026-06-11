@@ -48,4 +48,6 @@ while 1:
     part_1 = retrieve_info(payload_1)
     part_2 = retrieve_info(payload_2)
 
-    print(part_1, part_2)
+    combined = {**part_1["result"], **part_2["result"]}
+
+    print(combined)
