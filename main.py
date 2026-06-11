@@ -46,7 +46,7 @@ def retrieve_info(payload):
 while 1:
     time.sleep(1)
 
-combined = {}
+    combined = {}
 
     try:
         part_1 = retrieve_info(payload_1)
