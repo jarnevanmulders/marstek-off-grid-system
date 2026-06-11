@@ -2,6 +2,10 @@ import socket
 import json
 import time
 
+from luma.core.interface.serial import i2c
+from luma.oled.device import ssd1306
+from PIL import Image, ImageDraw, ImageFont
+
 MARSTEK_IP = "192.168.10.141"   # pas aan naar jouw toestel
 PORT = 30000
 
@@ -42,6 +46,29 @@ def retrieve_info(payload):
     finally:
         sock.close()
 
+def update_display(data):
+    serial = i2c(port=1, address=0x3C)
+    device = ssd1306(serial)
+
+    image = Image.new("1", (device.width, device.height))
+    draw = ImageDraw.Draw(image)
+
+    # veilige data extractie
+    soc = data.get("soc", data.get("bat_soc", 0))
+    temp = data.get("bat_temp", 0)
+    cap = data.get("bat_capacity", data.get("bat_cap", 0))
+    offgrid = data.get("offgrid_power", 0)
+
+    # formatting
+    cap_kwh = cap / 1000
+
+    # layout (4 regels netjes verdeeld)
+    draw.text((0, 0),  f"SOC: {soc}%", fill=255)
+    draw.text((0, 16), f"Temp: {temp}C", fill=255)
+    draw.text((0, 32), f"Cap: {cap_kwh:.2f} kWh", fill=255)
+    draw.text((0, 48), f"Offgrid: {offgrid}W", fill=255)
+
+    device.display(image)
 
 while 1:
     time.sleep(1)
@@ -68,5 +95,6 @@ while 1:
         print(combined.get("bat_temp"))
         print((combined.get("bat_capacity") or 0) / 1000)
         print(combined.get("offgrid_power"))
+        update_display(combined)
     except Exception as e:
         print(f"print failed: {e}")
