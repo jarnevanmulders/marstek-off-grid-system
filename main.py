@@ -155,10 +155,12 @@ while 1:
                 output_load = False
             elif not output_load and soc >= 40:
                 output_load = True
+            
+        print(output_pv, output_load)
 
 
         # Update relays
-        update_relays()
+        # update_relays()
 
     # veilige prints
     try:
