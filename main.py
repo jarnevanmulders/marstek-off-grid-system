@@ -93,6 +93,7 @@ while 1:
 
     # veilige prints
     try:
+        print(part_1, part_2)
         print(combined.get("soc"))
         # print(combined.get("bat_temp"))
         # print((combined.get("bat_capacity") or 0) / 1000)
