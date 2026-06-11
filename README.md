@@ -1,4 +1,4 @@
-# Marstek Off-grid System Firmware (Based on LibreVNA hardware)
+# Marstek Off-grid System Firmware
 
 ### 0️⃣ Boot without USB-C adapter PSU
 This configuration change is necessary because the Raspberry Pi 5 has a higher power requirement, and setting PSU_MAX_CURRENT=5000 ensures that the Pi recognizes that the connected power supply can deliver up to 5A. This can help resolve issues where the Pi fails to boot properly due to insufficient power, especially when using power-hungry USB devices or when booting from USB. Do the following:
