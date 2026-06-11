@@ -71,6 +71,8 @@ heartbeat = False
 
 def update_display(data):
 
+    global heartbeat
+
     image = Image.new("1", (device.width, device.height))
     draw = ImageDraw.Draw(image)
 
