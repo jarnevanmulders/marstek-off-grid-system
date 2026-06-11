@@ -92,9 +92,11 @@ while 1:
     # veilige prints
     try:
         print(combined.get("soc"))
-        print(combined.get("bat_temp"))
-        print((combined.get("bat_capacity") or 0) / 1000)
-        print(combined.get("offgrid_power"))
-        update_display(combined)
+        # print(combined.get("bat_temp"))
+        # print((combined.get("bat_capacity") or 0) / 1000)
+        # print(combined.get("offgrid_power"))
+        if update_display.last != combined:
+            update_display.last = combined
+            update_display(combined)
     except Exception as e:
         print(f"print failed: {e}")
