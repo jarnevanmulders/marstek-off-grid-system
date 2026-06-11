@@ -70,6 +70,8 @@ def update_display(data):
 
     device.display(image)
 
+update_display.last = None
+
 while 1:
     time.sleep(1)
 
