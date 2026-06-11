@@ -117,25 +117,48 @@ def update_relays():
     update_relay(PV_RELAY_PIN, output_pv)
     update_relay(LOAD_RELAY_PIN, output_load)
     
+combined = {}
+
+counter = 0
 
 while 1:
-    time.sleep(10)
+    time.sleep(1)
 
-    combined = {}
+    counter = counter + 1
 
-    try:
-        part_1 = retrieve_info(payload_1)
-        if part_1 and "result" in part_1:
-            combined.update(part_1["result"])
-    except Exception as e:
-        print(f"part_1 failed: {e}")
+    if counter > 10:
+        counter = 0
 
-    try:
-        part_2 = retrieve_info(payload_2)
-        if part_2 and "result" in part_2:
-            combined.update(part_2["result"])
-    except Exception as e:
-        print(f"part_2 failed: {e}")
+        try:
+            part_1 = retrieve_info(payload_1)
+            if part_1 and "result" in part_1:
+                combined.update(part_1["result"])
+        except Exception as e:
+            print(f"part_1 failed: {e}")
+
+        try:
+            part_2 = retrieve_info(payload_2)
+            if part_2 and "result" in part_2:
+                combined.update(part_2["result"])
+        except Exception as e:
+            print(f"part_2 failed: {e}")
+
+
+        # Check SoC and determine load and pv relay
+        if output_pv and soc >= 99:
+            output_pv = False
+        elif not output_pv and soc <= 90:
+            output_pv = True
+
+        # Load hysterese
+        if output_load and soc <= 30:
+            output_load = False
+        elif not output_load and soc >= 40:
+            output_load = True
+
+
+        # Update relays
+        update_relays()
 
     # veilige prints
     try:
@@ -152,19 +175,3 @@ while 1:
         update_display(combined)
     except Exception as e:
         print(f"print failed: {e}")
-    
-    # Check SoC and determine load and pv relay
-    if output_pv and soc >= 99:
-        output_pv = False
-    elif not output_pv and soc <= 90:
-        output_pv = True
-
-    # Load hysterese
-    if output_load and soc <= 30:
-        output_load = False
-    elif not output_load and soc >= 40:
-        output_load = True
-
-
-    # Update relays
-    update_relays()
