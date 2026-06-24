@@ -186,6 +186,7 @@ try:
             # print(combined.get("offgrid_power"))
             # if update_display.last != combined:
             #     update_display.last = combined
+            print(counter)
             update_display(combined, counter)
         except Exception as e:
             print(f"print failed: {e}")
