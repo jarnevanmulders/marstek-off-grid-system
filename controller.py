@@ -69,7 +69,7 @@ def retrieve_info(payload):
 heartbeat = False
 
 
-def update_display(data):
+def update_display(data, counter):
 
     global heartbeat
 
@@ -95,6 +95,7 @@ def update_display(data):
 
     if heartbeat:
         draw.rectangle((120, 0, 127, 7), fill=255)
+        draw.text((120, 10), counter, fill=255)
 
     device.display(image)
 
@@ -185,7 +186,7 @@ try:
             # print(combined.get("offgrid_power"))
             # if update_display.last != combined:
             #     update_display.last = combined
-            update_display(combined)
+            update_display(combined, counter)
         except Exception as e:
             print(f"print failed: {e}")
 
