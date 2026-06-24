@@ -117,7 +117,7 @@ def update_relay(pin, state):
 def update_relays():
     update_relay(PV_RELAY_PIN, output_pv)
     time.sleep(0.5)
-    #update_relay(LOAD_RELAY_PIN, output_load)
+    update_relay(LOAD_RELAY_PIN, output_load)
     
 combined = {}
 
