@@ -131,7 +131,7 @@ try:
 
         counter = counter + 1
 
-        if counter > 10:
+        if counter > 30:
             counter = 0
 
             try:
