@@ -121,7 +121,7 @@ def update_relays():
     
 combined = {}
 
-counter = 9
+counter = 29
 
 last_output_pv = False
 last_output_load = False
