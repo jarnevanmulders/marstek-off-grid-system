@@ -95,7 +95,7 @@ def update_display(data, counter):
 
     if heartbeat:
         draw.rectangle((120, 0, 127, 7), fill=255)
-        draw.text((120, 10), counter, fill=255)
+        draw.text((120, 10), f"{counter}", fill=255)
 
     device.display(image)
 
