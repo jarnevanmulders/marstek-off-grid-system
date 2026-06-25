@@ -133,7 +133,7 @@ def update_relays():
     update_relay(LOAD_RELAY_PIN, output_load)
 
 
-def poll_battery():
+def poll_battery(config):
     try:
         part_1 = retrieve_info(payload_1)
         if part_1 and "result" in part_1:
@@ -214,7 +214,7 @@ def main():
     config = retrieve_yaml_file()
 
     last_soc = time.time()
-    last_poll = time.time()
+    last_poll = time.time()-59
 
     try:
         while True:
@@ -227,7 +227,7 @@ def main():
 
             # elke 60 seconden
             if now - last_poll >= 60.0:
-                poll_battery()
+                poll_battery(config)
                 last_poll = now
 
             time.sleep(0.05)  # kleine sleep om CPU te sparen
