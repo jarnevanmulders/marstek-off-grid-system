@@ -88,8 +88,8 @@ def update_display(data, counter):
     # formatting
     cap_kwh = cap / 1000
     
-    if offgrid > 32767:
-        offgrid -= 65536
+    # if offgrid > 32767:
+    #     offgrid -= 65536
 
     # layout (4 regels netjes verdeeld)
     draw.text((0, 0),  f"SOC: {soc}%", fill=255)
@@ -157,6 +157,12 @@ try:
                 part_2 = retrieve_info(payload_2)
                 if part_2 and "result" in part_2:
                     combined.update(part_2["result"])
+
+                    # check offgrid power
+                    offgrid = part_2.get("offgrid", 0)
+                    if offgrid > 32767:
+                        offgrid -= 65536
+                    part_1["offgrid"] = offgrid
 
                     send_energy_system_influxdb("influxdb_local", config, "Energy System", None, part_2)
 
