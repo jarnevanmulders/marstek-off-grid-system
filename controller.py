@@ -134,7 +134,7 @@ def update_relays():
 
 
 def poll_battery(config):
-    global soc
+    global soc, output_pv, output_load
     try:
         part_1 = retrieve_info(payload_1)
         if part_1 and "result" in part_1:
@@ -191,22 +191,11 @@ def poll_battery(config):
         last_output_load = output_load
 
 
-
-
 def check_soc():
     global soc
     try:
-        # print(part_1, part_2)
-
         soc = combined.get("soc")
-
         print(f"SOC: {soc}")
-        # print(combined.get("bat_temp"))
-        # print((combined.get("bat_capacity") or 0) / 1000)
-        # print(combined.get("offgrid_power"))
-        # if update_display.last != combined:
-        #     update_display.last = combined
-        print(counter)
         update_display(combined, counter)
     except Exception as e:
         print(f"print failed: {e}")
