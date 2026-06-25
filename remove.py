@@ -1,6 +1,8 @@
 from influxdb_client import InfluxDBClient
 from datetime import datetime, timedelta
 
+from configuration import *
+
 def delete_battery_measurement(config, influxdb_server):
     client = InfluxDBClient(
         url=config[influxdb_server]['url'],
@@ -32,3 +34,7 @@ def delete_battery_measurement(config, influxdb_server):
         print(f"[ERROR] delete failed: {e}")
 
     client.close()
+
+config = retrieve_yaml_file()
+
+delete_battery_measurement(config, "influxdb_local")
