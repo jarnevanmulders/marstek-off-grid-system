@@ -164,7 +164,7 @@ try:
                         off_grid -= 65536
                     part_2["result"]["offgrid_power"] = off_grid
 
-                    print(off_grid)
+                    # print(off_grid)
 
                     send_energy_system_influxdb("influxdb_local", config, "Energy System", None, part_2)
 
