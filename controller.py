@@ -84,6 +84,9 @@ def update_display(data, counter):
 
     # formatting
     cap_kwh = cap / 1000
+    
+    if offgrid > 32767:
+        offgrid -= 65536
 
     # layout (4 regels netjes verdeeld)
     draw.text((0, 0),  f"SOC: {soc}%", fill=255)
