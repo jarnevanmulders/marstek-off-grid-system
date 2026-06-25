@@ -134,6 +134,7 @@ def update_relays():
 
 
 def poll_battery(config):
+    global soc
     try:
         part_1 = retrieve_info(payload_1)
         if part_1 and "result" in part_1:
@@ -192,7 +193,8 @@ def poll_battery(config):
 
 
 
-def check_soc(soc):
+def check_soc():
+    global soc
     try:
         # print(part_1, part_2)
 
@@ -222,7 +224,7 @@ def main():
 
             # elke 1 seconde
             if now - last_soc >= 1.0:
-                check_soc(soc)
+                check_soc()
                 last_soc = now
 
             # elke 60 seconden
