@@ -148,6 +148,9 @@ try:
                 if part_1 and "result" in part_1:
                     combined.update(part_1["result"])
 
+                    print(config)
+                    exit()
+
                     send_battery_status_influxdb("influxdb_local", config, "Battery", None, part_1)
 
             except Exception as e:
