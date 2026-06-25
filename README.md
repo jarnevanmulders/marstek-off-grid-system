@@ -110,7 +110,54 @@ sudo python3 -m pip install luma.oled luma.core pillow --break-system-packages
    	sudo systemctl enable controller.service
    	sudo systemctl start controller.service
   	```   
-
+### 8️⃣ InfluxDB en Grafana in Docker
+1. Install docker
+	```
+	sudo apt update
+	sudo apt upgrade -y
+	
+	curl -fsSL https://get.docker.com | sh
+	
+	sudo usermod -aG docker $pi
+	
+	sudo reboot
+	
+	docker --version
+ 	```
+2. InfluxDB
+   - Create folder for the data
+    ```
+    mkdir -p ~/influxdb/data
+	mkdir -p ~/influxdb/config
+	```
+   - Create docker container
+    ```
+	sudo docker run -d \
+	  --name=influxdb \
+	  -p 8086:8086 \
+	  -v ~/influxdb/data:/var/lib/influxdb2 \
+	  -v ~/influxdb/config:/etc/influxdb2 \
+	--restart=unless-stopped \
+	  influxdb:2.7
+	```
+3. Grafana
+   	- Create a persistent volume for your data
+	```
+    docker volume create grafana-storage
+	```
+	- Verify that the volume was created correctly (you should see some JSON output)
+	```
+    docker volume inspect grafana-storage
+	```
+	- Create docker container grafana
+	```
+	sudo docker run -d \
+	  -p 3000:3000 \
+	  --name=grafana \
+	  --volume grafana-storage:/var/lib/grafana \
+	  --restart=unless-stopped \
+	  grafana/grafana-enterprise:12.2.0
+	```
 
 ### 9️⃣ Other features
 1. Tailscale
