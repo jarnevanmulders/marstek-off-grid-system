@@ -175,7 +175,7 @@ try:
                 soc = combined.get("soc")
 
                 # Check SoC and determine load and pv relay
-                if output_pv and soc >= 99:
+                if output_pv and soc >= 95:
                     output_pv = False
                 elif not output_pv and soc <= 90:
                     output_pv = True
