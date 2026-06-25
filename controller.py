@@ -134,7 +134,7 @@ def update_relays():
 
 
 def poll_battery(config):
-    global soc, output_pv, output_load
+    global soc, output_pv, output_load, last_output_pv, last_output_load
     try:
         part_1 = retrieve_info(payload_1)
         if part_1 and "result" in part_1:
