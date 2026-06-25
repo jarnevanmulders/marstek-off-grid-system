@@ -148,7 +148,6 @@ def poll_battery(config):
     try:
         part_2 = retrieve_info(payload_2)
         if part_2 and "result" in part_2:
-            combined.update(part_2["result"])
 
             # check offgrid power
             off_grid = part_2["result"].get("offgrid_power", 0)
@@ -157,6 +156,8 @@ def poll_battery(config):
             part_2["result"]["offgrid_power"] = off_grid
 
             print(f"Off grid power: {off_grid}")
+
+            combined.update(part_2["result"])
 
             send_energy_system_influxdb("influxdb_local", config, "Energy System", None, part_2)
 
