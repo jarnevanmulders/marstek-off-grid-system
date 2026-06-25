@@ -159,10 +159,10 @@ try:
                     combined.update(part_2["result"])
 
                     # check offgrid power
-                    offgrid = part_2.get("offgrid", 0)
+                    offgrid = part_2.get("offgrid_power", 0)
                     if offgrid > 32767:
                         offgrid -= 65536
-                    part_1["offgrid"] = offgrid
+                    part_1["offgrid_power"] = offgrid
 
                     send_energy_system_influxdb("influxdb_local", config, "Energy System", None, part_2)
 
