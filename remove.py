@@ -1,5 +1,5 @@
 from influxdb_client import InfluxDBClient
-from datetime import datetime, timedelta
+from datetime import datetime, timezone
 
 from configuration import *
 
@@ -17,9 +17,9 @@ def delete_battery_measurement(config, influxdb_server):
 
     # delete ALL battery data (safety: adjust time range if needed)
     start = "1970-01-01T00:00:00Z"
-    stop = datetime.utcnow().isoformat() + "Z"
+    stop = datetime.now(timezone.utc).isoformat()
 
-    predicate = 'measurement="battery"'
+    predicate = '_measurement="battery"'
 
     try:
         delete_api.delete(
