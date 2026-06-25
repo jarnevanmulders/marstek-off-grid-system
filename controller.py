@@ -48,8 +48,6 @@ payload_2 = {
 
 combined = {}
 
-counter = 29
-
 last_output_pv = False
 last_output_load = False
 
@@ -108,7 +106,7 @@ def update_display(data, counter):
 
     if heartbeat:
         draw.rectangle((120, 0, 127, 7), fill=255)
-        draw.text((120, 10), f"{counter}", fill=255)
+        draw.text((100, 40), f"{counter}", fill=255)
 
     device.display(image)
 
@@ -191,17 +189,21 @@ def poll_battery(config):
         last_output_load = output_load
 
 
-def check_soc():
+def check_soc(counter):
     global soc
     try:
         soc = combined.get("soc")
         print(f"SOC: {soc}")
+        print(f"New measurement in {counter}s")
         update_display(combined, counter)
     except Exception as e:
         print(f"print failed: {e}")
 
 
 def main():
+
+    counter = 0
+
     config = retrieve_yaml_file()
 
     last_soc = time.time()
@@ -211,9 +213,11 @@ def main():
         while True:
             now = time.time()
 
+            counter = int(60 - (now - last_poll))
+
             # elke 1 seconde
             if now - last_soc >= 1.0:
-                check_soc()
+                check_soc(counter)
                 last_soc = now
 
             # elke 60 seconden
