@@ -148,7 +148,7 @@ try:
                 if part_1 and "result" in part_1:
                     combined.update(part_1["result"])
 
-                    send_battery_status_influxdb("influxdb", config, "Battery", None, part_1)
+                    send_battery_status_influxdb("influxdb_local", config, "Battery", None, part_1)
 
             except Exception as e:
                 print(f"part_1 failed: {e}")
@@ -158,7 +158,7 @@ try:
                 if part_2 and "result" in part_2:
                     combined.update(part_2["result"])
 
-                    send_energy_system_influxdb("influxdb", config, "Energy System", None, part_2)
+                    send_energy_system_influxdb("influxdb_local", config, "Energy System", None, part_2)
 
             except Exception as e:
                 print(f"part_2 failed: {e}")
