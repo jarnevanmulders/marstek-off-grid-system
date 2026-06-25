@@ -9,6 +9,9 @@ from luma.core.interface.serial import i2c
 from luma.oled.device import ssd1306
 from PIL import Image, ImageDraw, ImageFont
 
+from influxdb import *
+from configuration import *
+
 # BCM pinnummering gebruiken
 GPIO.setmode(GPIO.BCM)
 
@@ -29,14 +32,14 @@ device = ssd1306(serial)
 MARSTEK_IP = "192.168.10.141"   # pas aan naar jouw toestel
 PORT = 30000
 
-# JSON request (status batterij)
+# JSON request (status Battery)
 payload_1 = {
     "id": 1,
     "method": "Bat.GetStatus",
     "params": {"id": 0}
 }
 
-# JSON request (status batterij)
+# JSON request (status Energy System)
 payload_2 = {
     "id": 2,
     "method": "ES.GetStatus",
@@ -129,6 +132,8 @@ counter = 29
 last_output_pv = False
 last_output_load = False
 
+config = retrieve_yaml_file()
+
 try:
     while 1:
         time.sleep(1)
@@ -142,6 +147,9 @@ try:
                 part_1 = retrieve_info(payload_1)
                 if part_1 and "result" in part_1:
                     combined.update(part_1["result"])
+
+                    send_battery_status_influxdb("influxdb", config, "Battery", None, part_1)
+
             except Exception as e:
                 print(f"part_1 failed: {e}")
 
@@ -149,6 +157,9 @@ try:
                 part_2 = retrieve_info(payload_2)
                 if part_2 and "result" in part_2:
                     combined.update(part_2["result"])
+
+                    send_energy_system_influxdb("influxdb", config, "Energy System", None, part_2)
+
             except Exception as e:
                 print(f"part_2 failed: {e}")
 

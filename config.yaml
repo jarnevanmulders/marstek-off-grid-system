@@ -1,0 +1,8 @@
+fixed_configurations:
+  firmware_version: v0.0.1
+  device_name: BAT001
+influxdb_local:
+  bucket: UPS
+  org: kramaai
+  url: http://localhost:8086/
+  write_token: Ddp-1r3ZCVQzF_4MPBO0rCU1pB5E70Yb8QQVgELVx7ZfvTu_l-XTuS5ahqDtw-Ch8S8LjO2E9wpopFF11H-6ug==
