@@ -46,6 +46,13 @@ payload_2 = {
     "params": {"id": 0}
 }
 
+combined = {}
+
+counter = 29
+
+last_output_pv = False
+last_output_load = False
+
 
 def retrieve_info(payload):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -124,97 +131,141 @@ def update_relays():
     update_relay(PV_RELAY_PIN, output_pv)
     time.sleep(0.5)
     update_relay(LOAD_RELAY_PIN, output_load)
-    
-combined = {}
-
-counter = 29
-
-last_output_pv = False
-last_output_load = False
-
-config = retrieve_yaml_file()
-
-try:
-    while 1:
-        time.sleep(1)
-
-        counter = counter + 1
-
-        if counter > 30:
-            counter = 0
-
-            try:
-                part_1 = retrieve_info(payload_1)
-                if part_1 and "result" in part_1:
-                    combined.update(part_1["result"])
-
-                    send_battery_status_influxdb("influxdb_local", config, "Battery", None, part_1)
-
-            except Exception as e:
-                print(f"part_1 failed: {e}")
-
-            try:
-                part_2 = retrieve_info(payload_2)
-                if part_2 and "result" in part_2:
-                    combined.update(part_2["result"])
-
-                    # check offgrid power
-                    off_grid = part_2["result"].get("offgrid_power", 0)
-                    if off_grid > 32767:
-                        off_grid -= 65536
-                    part_2["result"]["offgrid_power"] = off_grid
-
-                    print(f"Off grid power: {off_grid}")
-
-                    send_energy_system_influxdb("influxdb_local", config, "Energy System", None, part_2)
-
-            except Exception as e:
-                print(f"part_2 failed: {e}")
-
-            if soc != None:
-                soc = combined.get("soc")
-
-                # Check SoC and determine load and pv relay
-                if output_pv and soc >= 95:
-                    output_pv = False
-                elif not output_pv and soc <= 90:
-                    output_pv = True
-
-                # Load hysterese
-                if output_load and soc <= 30:
-                    output_load = False
-                elif not output_load and soc >= 40:
-                    output_load = True
-                
-            print(output_pv, output_load)
 
 
-            # Update relays
-            if output_pv != last_output_pv or output_load != last_output_load:
-                update_relays()
+def poll_battery():
+    try:
+        part_1 = retrieve_info(payload_1)
+        if part_1 and "result" in part_1:
+            combined.update(part_1["result"])
 
-                last_output_pv = output_pv
-                last_output_load = output_load
+            send_battery_status_influxdb("influxdb_local", config, "Battery", None, part_1)
 
-        # veilige prints
-        try:
-            # print(part_1, part_2)
+    except Exception as e:
+        print(f"part_1 failed: {e}")
 
-            soc = combined.get("soc")
+    time.sleep(3)
 
-            print(f"SOC: {soc}")
-            # print(combined.get("bat_temp"))
-            # print((combined.get("bat_capacity") or 0) / 1000)
-            # print(combined.get("offgrid_power"))
-            # if update_display.last != combined:
-            #     update_display.last = combined
-            print(counter)
-            update_display(combined, counter)
-        except Exception as e:
-            print(f"print failed: {e}")
+    try:
+        part_2 = retrieve_info(payload_2)
+        if part_2 and "result" in part_2:
+            combined.update(part_2["result"])
 
-except KeyboardInterrupt:
-    pass
+            # check offgrid power
+            off_grid = part_2["result"].get("offgrid_power", 0)
+            if off_grid > 32767:
+                off_grid -= 65536
+            part_2["result"]["offgrid_power"] = off_grid
 
-finally:
-    GPIO.cleanup()
+            print(f"Off grid power: {off_grid}")
+
+            send_energy_system_influxdb("influxdb_local", config, "Energy System", None, part_2)
+
+    except Exception as e:
+        print(f"part_2 failed: {e}")
+
+    if soc != None:
+        soc = combined.get("soc")
+
+        # Check SoC and determine load and pv relay
+        if output_pv and soc >= 95:
+            output_pv = False
+        elif not output_pv and soc <= 90:
+            output_pv = True
+
+        # Load hysterese
+        if output_load and soc <= 30:
+            output_load = False
+        elif not output_load and soc >= 40:
+            output_load = True
+        
+    print(output_pv, output_load)
+
+
+    # Update relays
+    if output_pv != last_output_pv or output_load != last_output_load:
+        update_relays()
+
+        last_output_pv = output_pv
+        last_output_load = output_load
+
+
+
+
+def check_soc():
+    try:
+        # print(part_1, part_2)
+
+        soc = combined.get("soc")
+
+        print(f"SOC: {soc}")
+        # print(combined.get("bat_temp"))
+        # print((combined.get("bat_capacity") or 0) / 1000)
+        # print(combined.get("offgrid_power"))
+        # if update_display.last != combined:
+        #     update_display.last = combined
+        print(counter)
+        update_display(combined, counter)
+    except Exception as e:
+        print(f"print failed: {e}")
+
+
+def main():
+    config = retrieve_yaml_file()
+
+    last_soc = time.time()
+    last_poll = time.time()
+
+    try:
+        while True:
+            now = time.time()
+
+            # elke 1 seconde
+            if now - last_soc >= 1.0:
+                check_soc()
+                last_soc = now
+
+            # elke 60 seconden
+            if now - last_poll >= 60.0:
+                poll_battery()
+                last_poll = now
+
+            time.sleep(0.05)  # kleine sleep om CPU te sparen
+
+    except KeyboardInterrupt:
+        pass
+
+    finally:
+        GPIO.cleanup()
+
+
+if __name__ == "__main__":
+    main()
+
+
+
+# if __name__ == "__main__":
+#     try:
+
+#         config = retrieve_yaml_file()
+
+#         while 1:
+#             time.sleep(1)
+
+#             counter = counter + 1
+
+#             if counter > 60:
+#                 counter = 0
+
+#                 # poll battery system via API calls
+#                 poll_battery()
+
+
+#             # Check SOC
+#             check_soc()
+
+#     except KeyboardInterrupt:
+#         pass
+
+#     finally:
+#         GPIO.cleanup()
