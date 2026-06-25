@@ -192,7 +192,7 @@ def poll_battery(config):
 
 
 
-def check_soc():
+def check_soc(soc):
     try:
         # print(part_1, part_2)
 
@@ -222,7 +222,7 @@ def main():
 
             # elke 1 seconde
             if now - last_soc >= 1.0:
-                check_soc()
+                check_soc(soc)
                 last_soc = now
 
             # elke 60 seconden
